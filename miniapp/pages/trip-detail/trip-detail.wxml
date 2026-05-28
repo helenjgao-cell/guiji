@@ -1,0 +1,35 @@
+<view wx:if="{{trip}}" class="page">
+  <image wx:if="{{coverPath}}" class="cover" src="{{coverPath}}" mode="aspectFill" />
+
+  <view class="body">
+    <view class="title">{{trip.title}}</view>
+    <view class="meta">{{dateRange}} · {{trip.dayCount}} 天 · {{trip.cityNames.length}} 城</view>
+
+    <view class="section-title">途经</view>
+    <view class="timeline">
+      <view wx:for="{{cityList}}" wx:key="name" class="timeline-item">
+        <view class="t-emoji">{{item.emoji}}</view>
+        <view class="t-info">
+          <view class="t-name">{{item.name}}</view>
+          <view class="t-sub">{{item.subtitle}}<text class="t-date"> · {{item.date}}</text></view>
+        </view>
+        <image wx:if="{{item.photoPath}}" class="t-thumb" src="{{item.photoPath}}" mode="aspectFill" />
+      </view>
+    </view>
+
+    <view wx:if="{{photos.length > 0}}" class="section-title">照片</view>
+    <view wx:if="{{photos.length > 0}}" class="photo-wall">
+      <image
+        wx:for="{{photos}}"
+        wx:key="*this"
+        class="wall-photo"
+        src="{{item}}"
+        mode="aspectFill"
+        bindtap="previewPhoto"
+        data-url="{{item}}"
+      />
+    </view>
+  </view>
+</view>
+
+<view wx:else class="empty">旅行不存在</view>

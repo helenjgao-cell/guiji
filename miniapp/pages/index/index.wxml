@@ -1,0 +1,89 @@
+<view class="page">
+  <!-- 标题 + 统计 -->
+  <view class="header">
+    <view class="title">素页</view>
+    <view class="subtitle">SUYEP</view>
+  </view>
+
+  <view class="stats-grid">
+    <view class="stat-card">
+      <view class="stat-num">{{stats.cityCount}}</view>
+      <view class="stat-label">城</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-num">{{stats.provinceCount}}</view>
+      <view class="stat-label">省份/地区</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-num">{{stats.tripCount}}</view>
+      <view class="stat-label">次旅行</view>
+    </view>
+    <view class="stat-card">
+      <view class="stat-num">{{stats.thisYearCount}}</view>
+      <view class="stat-label">今年</view>
+    </view>
+  </view>
+
+  <view class="progress-row">
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{stats.cnProgressPct < 100 ? stats.cnProgressPct : 100}}%"></view>
+    </view>
+    <view class="progress-text">中国地级市 {{stats.cnCityCount}} / 337 · {{stats.cnProgressPctText}}%</view>
+  </view>
+
+  <!-- 地图 -->
+  <view class="map-wrap">
+    <map
+      id="cityMap"
+      class="map"
+      latitude="{{mapCenter.lat}}"
+      longitude="{{mapCenter.lng}}"
+      scale="{{mapScale}}"
+      markers="{{markers}}"
+      bindmarkertap="onMarkerTap"
+      show-location="{{false}}"
+      enable-3D="{{false}}"
+      enable-rotate="{{false}}"
+    />
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <button class="btn-primary" bindtap="onLiveCheckIn" disabled="{{checkingIn}}">
+      {{checkingIn ? '⏳ 正在定位...' : '📍 现场打卡'}}
+    </button>
+    <button class="btn-secondary" bindtap="onChoosePhoto" disabled="{{processing}}">
+      📷 选照片识别（需含 GPS 的原图）
+    </button>
+  </view>
+
+  <!-- 当前选中城市卡 -->
+  <view wx:if="{{selectedCity}}" class="selected-card">
+    <view class="selected-emoji">{{selectedEmoji}}</view>
+    <view class="selected-info">
+      <view class="selected-name">{{selectedCity.name}}</view>
+      <view class="selected-sub">
+        {{selectedCity.parent ? selectedCity.parent + ' · ' + selectedCity.province : selectedCity.province}}
+      </view>
+      <view class="selected-date">{{selectedCity.date}}</view>
+    </view>
+    <view class="selected-close" bindtap="closeSelected">×</view>
+  </view>
+
+  <!-- 列表（最近 10 条）-->
+  <view wx:if="{{cities.length > 0}}" class="recent">
+    <view class="section-title">最近点亮</view>
+    <view wx:for="{{recentCities}}" wx:key="name" class="city-row" bindtap="onRowTap" data-name="{{item.name}}">
+      <view class="city-emoji">{{item.emoji}}</view>
+      <view class="city-info">
+        <view class="city-name">{{item.name}}</view>
+        <view class="city-sub">{{item.subtitle}}</view>
+      </view>
+      <view class="city-date">{{item.date}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{cities.length === 0}}" class="empty">
+    还没有点亮任何城市{'\n'}点上方按钮 现场打卡 或 选一张含 GPS 的照片
+  </view>
+</view>

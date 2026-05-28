@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="header">
+    <view class="title">📖 旅行</view>
+    <view class="hint">每次旅行 = 时间相邻（≤ 7 天）的多座城市</view>
+  </view>
+
+  <view wx:if="{{trips.length === 0}}" class="empty">
+    还没有旅行{'\n'}先在 地图 tab 上传几张同一次旅行的照片
+  </view>
+
+  <view wx:else class="trip-list">
+    <view
+      wx:for="{{trips}}"
+      wx:key="id"
+      class="trip-card"
+      bindtap="onTripTap"
+      data-id="{{item.id}}"
+    >
+      <image
+        wx:if="{{item.coverPath}}"
+        class="trip-cover"
+        src="{{item.coverPath}}"
+        mode="aspectFill"
+      />
+      <view wx:else class="trip-cover-empty">📖</view>
+
+      <view class="trip-body">
+        <view class="trip-title">{{item.title}}</view>
+        <view class="trip-meta">
+          {{item.dateRange}} · {{item.dayCount}} 天 · {{item.cityNames.length}} 城
+        </view>
+        <view class="trip-emojis">
+          <text wx:for="{{item.emojiList}}" wx:for-item="e" wx:key="*this" class="trip-emoji">{{e}}</text>
+          <text wx:if="{{item.cityNames.length > 8}}" class="trip-more">+{{item.cityNames.length - 8}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

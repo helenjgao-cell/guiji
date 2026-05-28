@@ -1,0 +1,19 @@
+{
+  "name": "素页 Suyep",
+  "short_name": "素页",
+  "description": "上传照片自动点亮城市，每次旅行自动成册",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#faf8f5",
+  "theme_color": "#d97757",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

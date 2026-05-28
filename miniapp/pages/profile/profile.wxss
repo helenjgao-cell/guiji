@@ -1,0 +1,98 @@
+.page {
+  padding: 30rpx 28rpx 60rpx;
+}
+
+.header {
+  text-align: center;
+  padding: 24rpx 0 32rpx;
+}
+
+.title {
+  font-size: 56rpx;
+  font-weight: 200;
+  letter-spacing: 16rpx;
+  color: #5c544a;
+}
+
+.subtitle {
+  font-size: 22rpx;
+  letter-spacing: 6rpx;
+  color: #b8a78f;
+  margin-top: 8rpx;
+}
+
+.overview {
+  background: white;
+  border-radius: 24rpx;
+  padding: 8rpx 28rpx;
+  margin-bottom: 32rpx;
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.04);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #f0eae0;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row-label {
+  color: #888;
+  font-size: 26rpx;
+}
+
+.row-value {
+  color: #2c2c2c;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.section {
+  margin-bottom: 32rpx;
+}
+
+.section-title {
+  font-size: 22rpx;
+  color: #b8a78f;
+  letter-spacing: 4rpx;
+  padding: 8rpx 12rpx;
+}
+
+.action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 28rpx;
+  border-radius: 16rpx;
+  margin-bottom: 12rpx;
+  box-shadow: 0 1rpx 2rpx rgba(0, 0, 0, 0.03);
+}
+
+.action-label {
+  font-size: 28rpx;
+  color: #2c2c2c;
+}
+
+.action-arrow {
+  color: #c8b8a0;
+  font-size: 32rpx;
+}
+
+.about-text {
+  padding: 8rpx 12rpx;
+  font-size: 24rpx;
+  color: #5c544a;
+  line-height: 1.6;
+  margin-bottom: 8rpx;
+}
+
+.about-text.muted {
+  color: #aaa;
+  font-size: 22rpx;
+}

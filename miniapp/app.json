@@ -1,0 +1,46 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/trips/trips",
+    "pages/trip-detail/trip-detail",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#faf8f5",
+    "navigationBarTitleText": "素页",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#faf8f5"
+  },
+  "tabBar": {
+    "color": "#aaa",
+    "selectedColor": "#d97757",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "地图"
+      },
+      {
+        "pagePath": "pages/trips/trips",
+        "text": "旅行"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用你的当前位置点亮城市"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseLocation"
+  ],
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2"
+}

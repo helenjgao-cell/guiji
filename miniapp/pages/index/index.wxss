@@ -1,0 +1,220 @@
+.page {
+  padding: 30rpx 28rpx 60rpx;
+}
+
+.header {
+  text-align: center;
+  padding: 16rpx 0 32rpx;
+}
+
+.title {
+  font-size: 56rpx;
+  font-weight: 200;
+  letter-spacing: 16rpx;
+  color: #5c544a;
+}
+
+.subtitle {
+  font-size: 22rpx;
+  letter-spacing: 6rpx;
+  color: #b8a78f;
+  margin-top: 8rpx;
+}
+
+/* 统计 4 卡 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 24rpx;
+  padding: 28rpx 12rpx;
+  text-align: center;
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.04);
+}
+
+.stat-num {
+  font-size: 48rpx;
+  font-weight: 300;
+  color: #5c544a;
+  line-height: 1.1;
+}
+
+.stat-label {
+  font-size: 20rpx;
+  color: #b8a78f;
+  margin-top: 6rpx;
+  letter-spacing: 2rpx;
+}
+
+.progress-row {
+  margin-bottom: 24rpx;
+  padding: 0 8rpx;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8rpx;
+  background: #f0eae0;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #d97757 0%, #e8a47c 100%);
+  border-radius: 4rpx;
+}
+
+.progress-text {
+  font-size: 22rpx;
+  color: #aaa;
+  text-align: center;
+  margin-top: 10rpx;
+}
+
+/* 地图 */
+.map-wrap {
+  border-radius: 24rpx;
+  overflow: hidden;
+  margin-bottom: 24rpx;
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.04);
+}
+
+.map {
+  width: 100%;
+  height: 700rpx;
+}
+
+/* 操作 */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-bottom: 28rpx;
+}
+
+/* 选中城市卡 */
+.selected-card {
+  background: white;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  border: 2rpx solid #d97757;
+  position: relative;
+}
+
+.selected-emoji {
+  font-size: 60rpx;
+  width: 72rpx;
+  text-align: center;
+}
+
+.selected-info {
+  flex: 1;
+}
+
+.selected-name {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #2c2c2c;
+}
+
+.selected-sub {
+  font-size: 24rpx;
+  color: #888;
+  margin-top: 4rpx;
+}
+
+.selected-date {
+  font-size: 22rpx;
+  color: #b8a78f;
+  margin-top: 6rpx;
+}
+
+.selected-close {
+  position: absolute;
+  top: 12rpx;
+  right: 18rpx;
+  font-size: 40rpx;
+  color: #b8a78f;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 最近列表 */
+.recent {
+  background: white;
+  border-radius: 24rpx;
+  padding: 12rpx 24rpx;
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.04);
+}
+
+.section-title {
+  font-size: 24rpx;
+  color: #b8a78f;
+  letter-spacing: 4rpx;
+  padding: 20rpx 0 12rpx;
+  border-bottom: 2rpx dashed #f0eae0;
+  margin-bottom: 12rpx;
+}
+
+.city-row {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 24rpx 8rpx;
+  border-bottom: 2rpx solid #f0eae0;
+}
+
+.city-row:last-child {
+  border-bottom: none;
+}
+
+.city-emoji {
+  font-size: 44rpx;
+  width: 60rpx;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.city-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.city-name {
+  font-size: 28rpx;
+  color: #2c2c2c;
+  font-weight: 500;
+}
+
+.city-sub {
+  font-size: 22rpx;
+  color: #888;
+  margin-top: 4rpx;
+}
+
+.city-date {
+  font-size: 24rpx;
+  color: #888;
+  flex-shrink: 0;
+}
+
+.empty {
+  text-align: center;
+  color: #aaa;
+  padding: 80rpx 40rpx;
+  font-size: 26rpx;
+  white-space: pre-line;
+}

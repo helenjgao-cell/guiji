@@ -1,0 +1,94 @@
+/* 全局样式：暖色调，与 H5 保持一致 */
+page {
+  background: #faf8f5;
+  color: #2c2c2c;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+view, text {
+  box-sizing: border-box;
+}
+
+/* 通用按钮样式重置 */
+button {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  line-height: normal;
+}
+
+button::after {
+  border: none;
+}
+
+.app-container {
+  min-height: 100vh;
+  padding: 20rpx 28rpx 60rpx;
+}
+
+/* 卡片 */
+.card {
+  background: white;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-shadow: 0 1rpx 4rpx rgba(0, 0, 0, 0.04);
+}
+
+/* 主按钮 */
+.btn-primary {
+  background: #d97757;
+  color: white;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  text-align: center;
+  font-size: 30rpx;
+}
+
+.btn-primary[disabled] {
+  background: #d97757;
+  opacity: 0.5;
+}
+
+/* 次按钮 */
+.btn-secondary {
+  background: white;
+  color: #5c544a;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  text-align: center;
+  font-size: 28rpx;
+  border: 2rpx dashed #d4cfc6;
+}
+
+.btn-secondary[disabled] {
+  opacity: 0.5;
+}
+
+/* 危险按钮 */
+.btn-danger {
+  background: white;
+  color: #b85c4a;
+  padding: 20rpx;
+  border-radius: 16rpx;
+  text-align: center;
+  font-size: 26rpx;
+  border: 2rpx solid #f0d4cc;
+}
+
+/* 计数文本 */
+.muted {
+  color: #aaa;
+  font-size: 24rpx;
+}
+
+/* 空态 */
+.empty {
+  text-align: center;
+  padding: 80rpx 40rpx;
+  color: #aaa;
+  font-size: 26rpx;
+}

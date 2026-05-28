@@ -1,0 +1,59 @@
+<view class="page">
+  <view class="header">
+    <view class="title">素页</view>
+    <view class="subtitle">SUYEP</view>
+  </view>
+
+  <!-- 数据概览 -->
+  <view class="overview">
+    <view class="row">
+      <view class="row-label">已点亮</view>
+      <view class="row-value">{{stats.cityCount}} 城</view>
+    </view>
+    <view class="row">
+      <view class="row-label">中国地级市</view>
+      <view class="row-value">{{stats.cnCityCount}} / 337 ({{stats.cnProgressPctText}}%)</view>
+    </view>
+    <view class="row">
+      <view class="row-label">省份/地区</view>
+      <view class="row-value">{{stats.provinceCount}}</view>
+    </view>
+    <view class="row">
+      <view class="row-label">旅行</view>
+      <view class="row-value">{{stats.tripCount}} 次</view>
+    </view>
+    <view class="row">
+      <view class="row-label">今年新增</view>
+      <view class="row-value">{{stats.thisYearCount}}</view>
+    </view>
+    <view class="row" wx:if="{{stats.north}}">
+      <view class="row-label">最北</view>
+      <view class="row-value">{{stats.northName}}</view>
+    </view>
+    <view class="row" wx:if="{{stats.south}}">
+      <view class="row-label">最南</view>
+      <view class="row-value">{{stats.southName}}</view>
+    </view>
+  </view>
+
+  <!-- 操作 -->
+  <view class="section">
+    <view class="section-title">数据</view>
+    <view class="action-row" bindtap="onClear">
+      <view class="action-label">清除所有数据</view>
+      <view class="action-arrow">›</view>
+    </view>
+    <view class="action-row" bindtap="onShareApp">
+      <view class="action-label">分享给朋友</view>
+      <view class="action-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 关于 -->
+  <view class="section">
+    <view class="section-title">关于</view>
+    <view class="about-text">素页 — 上传含 GPS 的照片或现场打卡，自动点亮城市，自动归类成旅行小书。</view>
+    <view class="about-text muted">数据全部存在你的设备本地（小程序存储 + 文件系统），不上传服务器。</view>
+    <view class="about-text muted">v0.1 · 与 H5 版同源 · suyep.com</view>
+  </view>
+</view>
