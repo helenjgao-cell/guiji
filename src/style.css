@@ -328,14 +328,20 @@ main {
 }
 
 /* === 集邮册网格 === */
+.stamp-grid-wrap {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
 .stamp-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   gap: 14px;
-  background: white;
-  border-radius: 16px;
   padding: 20px 18px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .stamp-cell {
@@ -378,6 +384,32 @@ main {
   font-size: 11px;
   color: #aaa;
   font-variant-numeric: tabular-nums;
+}
+
+/* 展开/收起 按钮（列表 / 集邮册 / 旅行 共用）*/
+.expand-btn {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  border: none;
+  color: #b8a78f;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.15s, background 0.15s;
+  margin-top: 4px;
+}
+
+.expand-btn:hover {
+  color: #5c544a;
+  background: #faf8f5;
+}
+
+/* 集邮册的展开按钮：贴在 grid 底部，视觉一体 */
+.stamp-grid-wrap .expand-btn {
+  margin-top: 0;
+  border-top: 1px solid #f0eae0;
+  border-radius: 0;
 }
 
 /* === 旅行卡片 === */

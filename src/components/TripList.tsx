@@ -10,9 +10,12 @@ interface Props {
   onCityClick: (cityName: string) => void
 }
 
+const TRIPS_PAGE_SIZE = 5
+
 export default function TripList({ cities, photoUrls, onCityClick }: Props) {
   const trips = clusterIntoTrips(cities)
   const [openTripId, setOpenTripId] = useState<string | null>(null)
+  const [showAll, setShowAll] = useState(false)
   const cityByName = new Map(cities.map((c) => [c.name, c]))
 
   if (trips.length === 0) {
@@ -20,11 +23,13 @@ export default function TripList({ cities, photoUrls, onCityClick }: Props) {
   }
 
   const openTrip = trips.find((t) => t.id === openTripId) ?? null
+  const visible = showAll ? trips : trips.slice(0, TRIPS_PAGE_SIZE)
+  const hasMore = trips.length > TRIPS_PAGE_SIZE
 
   return (
     <>
       <div className="trip-list">
-        {trips.map((trip) => (
+        {visible.map((trip) => (
           <TripCard
             key={trip.id}
             trip={trip}
@@ -32,6 +37,17 @@ export default function TripList({ cities, photoUrls, onCityClick }: Props) {
             onClick={() => setOpenTripId(trip.id)}
           />
         ))}
+        {hasMore && (
+          <button
+            type="button"
+            className="expand-btn"
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll
+              ? '↑ 收起'
+              : `↓ 显示全部 ${trips.length} 次旅行（剩 ${trips.length - TRIPS_PAGE_SIZE} 次）`}
+          </button>
+        )}
       </div>
       {openTrip && (
         <TripDetail

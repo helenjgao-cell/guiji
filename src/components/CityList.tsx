@@ -6,13 +6,14 @@ import TripList from './TripList'
 
 interface Props {
   cities: City[]
-  /** cityName → blob URL；列表里显示缩略图，集邮册里显示印章 */
   photoUrls: Map<string, string>
-  /** 点章 / 点条目 → 让 CityMap 滚到该城市 */
   onCityClick: (cityName: string) => void
 }
 
 type ViewMode = 'list' | 'grid' | 'trips'
+
+const LIST_PAGE_SIZE = 8
+const GRID_PAGE_SIZE = 18
 
 export default function CityList({ cities, photoUrls, onCityClick }: Props) {
   const [view, setView] = useState<ViewMode>('list')
@@ -70,9 +71,13 @@ function ListView({
   photoUrls: Map<string, string>
   onCityClick: (n: string) => void
 }) {
+  const [showAll, setShowAll] = useState(false)
+  const visible = showAll ? cities : cities.slice(0, LIST_PAGE_SIZE)
+  const hasMore = cities.length > LIST_PAGE_SIZE
+
   return (
     <div className="city-list">
-      {cities.map((c) => {
+      {visible.map((c) => {
         const photoUrl = photoUrls.get(c.name)
         return (
           <button
@@ -96,6 +101,17 @@ function ListView({
           </button>
         )
       })}
+      {hasMore && (
+        <button
+          type="button"
+          className="expand-btn"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll
+            ? '↑ 收起'
+            : `↓ 显示全部 ${cities.length} 条（剩 ${cities.length - LIST_PAGE_SIZE} 条）`}
+        </button>
+      )}
     </div>
   )
 }
@@ -107,23 +123,40 @@ function GridView({
   cities: City[]
   onCityClick: (n: string) => void
 }) {
+  const [showAll, setShowAll] = useState(false)
+  const visible = showAll ? cities : cities.slice(0, GRID_PAGE_SIZE)
+  const hasMore = cities.length > GRID_PAGE_SIZE
+
   return (
-    <div className="stamp-grid">
-      {cities.map((c) => (
+    <div className="stamp-grid-wrap">
+      <div className="stamp-grid">
+        {visible.map((c) => (
+          <button
+            key={c.name}
+            type="button"
+            className="stamp-cell"
+            onClick={() => onCityClick(c.name)}
+          >
+            <div
+              className="stamp-large"
+              dangerouslySetInnerHTML={{ __html: generateStampSVG(c.name, 84) }}
+            />
+            <div className="stamp-cell-name">{c.name}</div>
+            <div className="stamp-cell-date">{c.date}</div>
+          </button>
+        ))}
+      </div>
+      {hasMore && (
         <button
-          key={c.name}
           type="button"
-          className="stamp-cell"
-          onClick={() => onCityClick(c.name)}
+          className="expand-btn"
+          onClick={() => setShowAll(!showAll)}
         >
-          <div
-            className="stamp-large"
-            dangerouslySetInnerHTML={{ __html: generateStampSVG(c.name, 84) }}
-          />
-          <div className="stamp-cell-name">{c.name}</div>
-          <div className="stamp-cell-date">{c.date}</div>
+          {showAll
+            ? '↑ 收起'
+            : `↓ 显示全部 ${cities.length} 枚印章（剩 ${cities.length - GRID_PAGE_SIZE} 枚）`}
         </button>
-      ))}
+      )}
     </div>
   )
 }
