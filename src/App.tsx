@@ -8,7 +8,6 @@ import { extractGPS } from './lib/exif'
 import { reverseGeocode } from './lib/geocode'
 import { processImage } from './lib/image'
 import { savePhoto, getPhoto, clearAllPhotos } from './lib/photo-store'
-import { buildBackup, restoreBackup, downloadBackup, type BackupData } from './lib/backup'
 
 interface ProcessSummary {
   total: number
@@ -32,7 +31,6 @@ export default function App() {
   const [photoUrls, setPhotoUrls] = useState<Map<string, string>>(new Map())
   const photoUrlsRef = useRef(photoUrls)
   photoUrlsRef.current = photoUrls
-  const importInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setCities(getCities())
@@ -237,41 +235,6 @@ export default function App() {
     setRecentlyAddedName(null)
   }
 
-  async function handleExport() {
-    try {
-      const data = await buildBackup()
-      downloadBackup(data)
-    } catch (e) {
-      console.error('[backup] export failed', e)
-      alert('导出失败：' + (e instanceof Error ? e.message : String(e)))
-    }
-  }
-
-  function handleImportClick() {
-    importInputRef.current?.click()
-  }
-
-  async function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    e.target.value = ''
-    try {
-      const text = await file.text()
-      const data = JSON.parse(text) as BackupData
-      const merge = confirm(
-        '点"确定"= 合并到当前数据（同名城市以备份为准）\n点"取消"= 替换全部当前数据',
-      )
-      const { citiesRestored, photosRestored } = await restoreBackup(data, { merge })
-      for (const url of photoUrlsRef.current.values()) URL.revokeObjectURL(url)
-      setPhotoUrls(new Map())
-      setCities(getCities())
-      alert(`导入成功！恢复 ${citiesRestored} 城市，${photosRestored} 张照片。`)
-    } catch (err) {
-      console.error('[backup] import failed', err)
-      alert('导入失败：' + (err instanceof Error ? err.message : String(err)))
-    }
-  }
-
   function handleCityClick(cityName: string) {
     setFocusCityName(null)
     setTimeout(() => setFocusCityName(cityName), 0)
@@ -309,24 +272,13 @@ export default function App() {
           </div>
         )}
         <CityList cities={cities} photoUrls={photoUrls} onCityClick={handleCityClick} />
-        <div className="toolbar">
-          <button onClick={handleExport} disabled={cities.length === 0}>
-            导出备份
-          </button>
-          <button onClick={handleImportClick}>导入备份</button>
-          {cities.length > 0 && (
+        {cities.length > 0 && (
+          <div className="toolbar">
             <button onClick={handleClear} className="danger">
               清除所有数据
             </button>
-          )}
-          <input
-            ref={importInputRef}
-            type="file"
-            accept=".json,application/json"
-            style={{ display: 'none' }}
-            onChange={handleImportFile}
-          />
-        </div>
+          </div>
+        )}
       </main>
     </div>
   )

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { City } from '../lib/storage'
 import { generateStampSVG } from '../lib/stamp'
 import { getCityEmoji } from '../lib/emoji'
@@ -13,7 +13,7 @@ interface Props {
 type ViewMode = 'list' | 'grid' | 'trips'
 
 const LIST_PAGE_SIZE = 8
-const GRID_PAGE_SIZE = 18
+const GRID_PAGE_SIZE = 12
 
 export default function CityList({ cities, photoUrls, onCityClick }: Props) {
   const [view, setView] = useState<ViewMode>('list')
@@ -31,22 +31,13 @@ export default function CityList({ cities, photoUrls, onCityClick }: Props) {
   return (
     <div className="city-collection">
       <div className="view-toggle">
-        <button
-          className={view === 'list' ? 'active' : ''}
-          onClick={() => setView('list')}
-        >
+        <button className={view === 'list' ? 'active' : ''} onClick={() => setView('list')}>
           ≡ 列表
         </button>
-        <button
-          className={view === 'grid' ? 'active' : ''}
-          onClick={() => setView('grid')}
-        >
+        <button className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')}>
           ▦ 集邮册
         </button>
-        <button
-          className={view === 'trips' ? 'active' : ''}
-          onClick={() => setView('trips')}
-        >
+        <button className={view === 'trips' ? 'active' : ''} onClick={() => setView('trips')}>
           📖 旅行
         </button>
       </div>
@@ -71,46 +62,47 @@ function ListView({
   photoUrls: Map<string, string>
   onCityClick: (n: string) => void
 }) {
-  const [showAll, setShowAll] = useState(false)
-  const visible = showAll ? cities : cities.slice(0, LIST_PAGE_SIZE)
-  const hasMore = cities.length > LIST_PAGE_SIZE
+  const [page, setPage] = useState(0)
+  const totalPages = Math.max(1, Math.ceil(cities.length / LIST_PAGE_SIZE))
+
+  // 数据变了重置回第一页
+  useEffect(() => {
+    setPage(0)
+  }, [cities.length])
+
+  const safePage = Math.min(page, totalPages - 1)
+  const visible = cities.slice(safePage * LIST_PAGE_SIZE, (safePage + 1) * LIST_PAGE_SIZE)
 
   return (
-    <div className="city-list">
-      {visible.map((c) => {
-        const photoUrl = photoUrls.get(c.name)
-        return (
-          <button
-            key={c.name}
-            type="button"
-            className="city-item"
-            onClick={() => onCityClick(c.name)}
-          >
-            {photoUrl ? (
-              <img className="city-thumb" src={photoUrl} alt={c.name} />
-            ) : (
-              <span className="city-emoji">{getCityEmoji(c.name)}</span>
-            )}
-            <div className="city-name-wrap">
-              <div className="city-name">{c.name}</div>
-              <div className="city-sub">
-                {c.parent ? `${c.parent} · ${c.province}` : c.province}
+    <div>
+      <div className="city-list">
+        {visible.map((c) => {
+          const photoUrl = photoUrls.get(c.name)
+          return (
+            <button
+              key={c.name}
+              type="button"
+              className="city-item"
+              onClick={() => onCityClick(c.name)}
+            >
+              {photoUrl ? (
+                <img className="city-thumb" src={photoUrl} alt={c.name} />
+              ) : (
+                <span className="city-emoji">{getCityEmoji(c.name)}</span>
+              )}
+              <div className="city-name-wrap">
+                <div className="city-name">{c.name}</div>
+                <div className="city-sub">
+                  {c.parent ? `${c.parent} · ${c.province}` : c.province}
+                </div>
               </div>
-            </div>
-            <span className="city-date">{c.date}</span>
-          </button>
-        )
-      })}
-      {hasMore && (
-        <button
-          type="button"
-          className="expand-btn"
-          onClick={() => setShowAll(!showAll)}
-        >
-          {showAll
-            ? '↑ 收起'
-            : `↓ 显示全部 ${cities.length} 条（剩 ${cities.length - LIST_PAGE_SIZE} 条）`}
-        </button>
+              <span className="city-date">{c.date}</span>
+            </button>
+          )
+        })}
+      </div>
+      {totalPages > 1 && (
+        <Pagination page={safePage} totalPages={totalPages} onChange={setPage} />
       )}
     </div>
   )
@@ -123,12 +115,18 @@ function GridView({
   cities: City[]
   onCityClick: (n: string) => void
 }) {
-  const [showAll, setShowAll] = useState(false)
-  const visible = showAll ? cities : cities.slice(0, GRID_PAGE_SIZE)
-  const hasMore = cities.length > GRID_PAGE_SIZE
+  const [page, setPage] = useState(0)
+  const totalPages = Math.max(1, Math.ceil(cities.length / GRID_PAGE_SIZE))
+
+  useEffect(() => {
+    setPage(0)
+  }, [cities.length])
+
+  const safePage = Math.min(page, totalPages - 1)
+  const visible = cities.slice(safePage * GRID_PAGE_SIZE, (safePage + 1) * GRID_PAGE_SIZE)
 
   return (
-    <div className="stamp-grid-wrap">
+    <div>
       <div className="stamp-grid">
         {visible.map((c) => (
           <button
@@ -146,17 +144,44 @@ function GridView({
           </button>
         ))}
       </div>
-      {hasMore && (
-        <button
-          type="button"
-          className="expand-btn"
-          onClick={() => setShowAll(!showAll)}
-        >
-          {showAll
-            ? '↑ 收起'
-            : `↓ 显示全部 ${cities.length} 枚印章（剩 ${cities.length - GRID_PAGE_SIZE} 枚）`}
-        </button>
+      {totalPages > 1 && (
+        <Pagination page={safePage} totalPages={totalPages} onChange={setPage} />
       )}
+    </div>
+  )
+}
+
+/** 分页控件：← 第 X / Y 页 → */
+export function Pagination({
+  page,
+  totalPages,
+  onChange,
+}: {
+  page: number
+  totalPages: number
+  onChange: (next: number) => void
+}) {
+  return (
+    <div className="pagination">
+      <button
+        type="button"
+        className="page-arrow"
+        onClick={() => onChange(Math.max(0, page - 1))}
+        disabled={page === 0}
+      >
+        ← 上一页
+      </button>
+      <span className="page-info">
+        {page + 1} / {totalPages}
+      </span>
+      <button
+        type="button"
+        className="page-arrow"
+        onClick={() => onChange(Math.min(totalPages - 1, page + 1))}
+        disabled={page === totalPages - 1}
+      >
+        下一页 →
+      </button>
     </div>
   )
 }

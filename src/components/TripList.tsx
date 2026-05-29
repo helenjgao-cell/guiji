@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { City } from '../lib/storage'
 import { clusterIntoTrips, formatDateRange, type Trip } from '../lib/trips'
 import { getCityEmoji } from '../lib/emoji'
 import TripDetail from './TripDetail'
+import { Pagination } from './CityList'
 
 interface Props {
   cities: City[]
@@ -15,16 +16,21 @@ const TRIPS_PAGE_SIZE = 5
 export default function TripList({ cities, photoUrls, onCityClick }: Props) {
   const trips = clusterIntoTrips(cities)
   const [openTripId, setOpenTripId] = useState<string | null>(null)
-  const [showAll, setShowAll] = useState(false)
+  const [page, setPage] = useState(0)
   const cityByName = new Map(cities.map((c) => [c.name, c]))
+
+  useEffect(() => {
+    setPage(0)
+  }, [trips.length])
 
   if (trips.length === 0) {
     return <div className="empty">还没有旅行，上传一组照片自动归类</div>
   }
 
   const openTrip = trips.find((t) => t.id === openTripId) ?? null
-  const visible = showAll ? trips : trips.slice(0, TRIPS_PAGE_SIZE)
-  const hasMore = trips.length > TRIPS_PAGE_SIZE
+  const totalPages = Math.max(1, Math.ceil(trips.length / TRIPS_PAGE_SIZE))
+  const safePage = Math.min(page, totalPages - 1)
+  const visible = trips.slice(safePage * TRIPS_PAGE_SIZE, (safePage + 1) * TRIPS_PAGE_SIZE)
 
   return (
     <>
@@ -37,18 +43,10 @@ export default function TripList({ cities, photoUrls, onCityClick }: Props) {
             onClick={() => setOpenTripId(trip.id)}
           />
         ))}
-        {hasMore && (
-          <button
-            type="button"
-            className="expand-btn"
-            onClick={() => setShowAll(!showAll)}
-          >
-            {showAll
-              ? '↑ 收起'
-              : `↓ 显示全部 ${trips.length} 次旅行（剩 ${trips.length - TRIPS_PAGE_SIZE} 次）`}
-          </button>
-        )}
       </div>
+      {totalPages > 1 && (
+        <Pagination page={safePage} totalPages={totalPages} onChange={setPage} />
+      )}
       {openTrip && (
         <TripDetail
           trip={openTrip}

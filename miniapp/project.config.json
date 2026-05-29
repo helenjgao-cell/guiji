@@ -2,7 +2,7 @@
   "miniprogramRoot": "./",
   "projectname": "suyep-miniapp",
   "description": "素页 — 城市足迹小程序",
-  "appid": "touristappid",
+  "appid": "wx07cf3803425118b1",
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -18,9 +18,24 @@
     "packNpmManually": false,
     "packNpmRelationList": [],
     "minifyWXSS": true,
-    "minifyWXML": true
+    "minifyWXML": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
   "compileType": "miniprogram",
   "libVersion": "3.5.0",
-  "condition": {}
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }
