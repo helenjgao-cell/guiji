@@ -1,147 +1,92 @@
 import { useState, useEffect } from 'react'
 import type { City } from '../lib/storage'
-import { generateStampSVG } from '../lib/stamp'
 import { getCityEmoji } from '../lib/emoji'
-import TripList from './TripList'
 
 interface Props {
   cities: City[]
-  photoUrls: Map<string, string>
   onCityClick: (cityName: string) => void
+  onDelete: (cityName: string) => void
+  onEditDate: (cityName: string, date: string) => void
 }
 
-type ViewMode = 'list' | 'grid' | 'trips'
+const PAGE_SIZE = 10
 
-const LIST_PAGE_SIZE = 8
-const GRID_PAGE_SIZE = 12
+export default function CityList({ cities, onCityClick, onDelete, onEditDate }: Props) {
+  const [page, setPage] = useState(0)
+  const [sortKey, setSortKey] = useState<'date' | 'addedAt'>('date')
 
-export default function CityList({ cities, photoUrls, onCityClick }: Props) {
-  const [view, setView] = useState<ViewMode>('list')
+  useEffect(() => {
+    setPage(0)
+  }, [cities.length, sortKey])
 
   if (cities.length === 0) {
     return (
       <div className="city-collection">
-        <div className="empty">还没有点亮任何城市，拖一张旅行照片试试 ↑</div>
+        <div className="empty">还没有城市，从上面搜索框里加一个 ↑</div>
       </div>
     )
   }
 
-  const sorted = [...cities].sort((a, b) => b.addedAt - a.addedAt)
+  const sorted = [...cities].sort((a, b) => {
+    if (sortKey === 'date') return b.date.localeCompare(a.date)
+    return b.addedAt - a.addedAt
+  })
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE))
+  const safePage = Math.min(page, totalPages - 1)
+  const visible = sorted.slice(safePage * PAGE_SIZE, (safePage + 1) * PAGE_SIZE)
 
   return (
     <div className="city-collection">
-      <div className="view-toggle">
-        <button className={view === 'list' ? 'active' : ''} onClick={() => setView('list')}>
-          ≡ 列表
-        </button>
-        <button className={view === 'grid' ? 'active' : ''} onClick={() => setView('grid')}>
-          ▦ 集邮册
-        </button>
-        <button className={view === 'trips' ? 'active' : ''} onClick={() => setView('trips')}>
-          📖 旅行
-        </button>
+      <div className="list-toolbar">
+        <span className="list-count">共 {cities.length} 城</span>
+        <div className="sort-toggle">
+          <button
+            className={sortKey === 'date' ? 'active' : ''}
+            onClick={() => setSortKey('date')}
+          >
+            按打卡日期
+          </button>
+          <button
+            className={sortKey === 'addedAt' ? 'active' : ''}
+            onClick={() => setSortKey('addedAt')}
+          >
+            按添加时间
+          </button>
+        </div>
       </div>
-
-      {view === 'list' && (
-        <ListView cities={sorted} photoUrls={photoUrls} onCityClick={onCityClick} />
-      )}
-      {view === 'grid' && <GridView cities={sorted} onCityClick={onCityClick} />}
-      {view === 'trips' && (
-        <TripList cities={cities} photoUrls={photoUrls} onCityClick={onCityClick} />
-      )}
-    </div>
-  )
-}
-
-function ListView({
-  cities,
-  photoUrls,
-  onCityClick,
-}: {
-  cities: City[]
-  photoUrls: Map<string, string>
-  onCityClick: (n: string) => void
-}) {
-  const [page, setPage] = useState(0)
-  const totalPages = Math.max(1, Math.ceil(cities.length / LIST_PAGE_SIZE))
-
-  // 数据变了重置回第一页
-  useEffect(() => {
-    setPage(0)
-  }, [cities.length])
-
-  const safePage = Math.min(page, totalPages - 1)
-  const visible = cities.slice(safePage * LIST_PAGE_SIZE, (safePage + 1) * LIST_PAGE_SIZE)
-
-  return (
-    <div>
       <div className="city-list">
-        {visible.map((c) => {
-          const photoUrl = photoUrls.get(c.name)
-          return (
+        {visible.map((c) => (
+          <div key={c.name} className="city-item">
             <button
-              key={c.name}
               type="button"
-              className="city-item"
+              className="city-item-main"
               onClick={() => onCityClick(c.name)}
             >
-              {photoUrl ? (
-                <img className="city-thumb" src={photoUrl} alt={c.name} />
-              ) : (
-                <span className="city-emoji">{getCityEmoji(c.name)}</span>
-              )}
+              <span className="city-emoji">{getCityEmoji(c.name)}</span>
               <div className="city-name-wrap">
                 <div className="city-name">{c.name}</div>
                 <div className="city-sub">
                   {c.parent ? `${c.parent} · ${c.province}` : c.province}
                 </div>
               </div>
-              <span className="city-date">{c.date}</span>
             </button>
-          )
-        })}
-      </div>
-      {totalPages > 1 && (
-        <Pagination page={safePage} totalPages={totalPages} onChange={setPage} />
-      )}
-    </div>
-  )
-}
-
-function GridView({
-  cities,
-  onCityClick,
-}: {
-  cities: City[]
-  onCityClick: (n: string) => void
-}) {
-  const [page, setPage] = useState(0)
-  const totalPages = Math.max(1, Math.ceil(cities.length / GRID_PAGE_SIZE))
-
-  useEffect(() => {
-    setPage(0)
-  }, [cities.length])
-
-  const safePage = Math.min(page, totalPages - 1)
-  const visible = cities.slice(safePage * GRID_PAGE_SIZE, (safePage + 1) * GRID_PAGE_SIZE)
-
-  return (
-    <div>
-      <div className="stamp-grid">
-        {visible.map((c) => (
-          <button
-            key={c.name}
-            type="button"
-            className="stamp-cell"
-            onClick={() => onCityClick(c.name)}
-          >
-            <div
-              className="stamp-large"
-              dangerouslySetInnerHTML={{ __html: generateStampSVG(c.name, 84) }}
+            <input
+              className="city-date-input"
+              type="date"
+              value={c.date}
+              onChange={(e) => onEditDate(c.name, e.target.value)}
+              title="打卡日期（可改）"
             />
-            <div className="stamp-cell-name">{c.name}</div>
-            <div className="stamp-cell-date">{c.date}</div>
-          </button>
+            <button
+              type="button"
+              className="delete-btn"
+              onClick={() => onDelete(c.name)}
+              title="删除"
+              aria-label={`删除 ${c.name}`}
+            >
+              ×
+            </button>
+          </div>
         ))}
       </div>
       {totalPages > 1 && (
@@ -151,7 +96,6 @@ function GridView({
   )
 }
 
-/** 分页控件：← 第 X / Y 页 → */
 export function Pagination({
   page,
   totalPages,

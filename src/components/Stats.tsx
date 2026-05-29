@@ -22,10 +22,6 @@ export default function Stats({ cities }: Props) {
           <div className="stat-label">省份/地区</div>
         </div>
         <div className="stat-card">
-          <div className="stat-num">{s.tripCount}</div>
-          <div className="stat-label">次旅行</div>
-        </div>
-        <div className="stat-card">
           <div className="stat-num">{s.thisYearCount}</div>
           <div className="stat-label">今年</div>
         </div>

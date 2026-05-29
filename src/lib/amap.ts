@@ -37,7 +37,7 @@ export function loadAMap(): Promise<void> {
       return
     }
     const script = document.createElement('script')
-    script.src = `https://webapi.amap.com/maps?v=2.0&key=${key}`
+    script.src = `https://webapi.amap.com/maps?v=2.0&key=${key}&plugin=AMap.ToolBar`
     script.async = true
     script.dataset.amap = 'true'
     script.onload = () => resolve()

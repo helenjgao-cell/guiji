@@ -1,15 +1,13 @@
 import type { City } from './storage'
-import { clusterIntoTrips } from './trips'
 
-/** 中国地级行政区总数（含港澳台 = 337 + 港澳 + 台湾，这里用 337 国内基准）*/
+/** 中国地级行政区总数（337 国内基准） */
 export const TOTAL_CN_PREFECTURES = 337
 
 export interface Stats {
   cityCount: number
-  cnCityCount: number // 有 adcode 的城市数（国内地级市 / 县级市）
+  cnCityCount: number
   provinceCount: number
   thisYearCount: number
-  tripCount: number
   /** 国内地级市覆盖率：0-100 */
   cnProgressPct: number
 
@@ -29,7 +27,6 @@ const EMPTY: Stats = {
   cnCityCount: 0,
   provinceCount: 0,
   thisYearCount: 0,
-  tripCount: 0,
   cnProgressPct: 0,
   latSpanKm: 0,
   lngSpanKm: 0,
@@ -38,18 +35,15 @@ const EMPTY: Stats = {
 export function computeStats(cities: City[]): Stats {
   if (cities.length === 0) return EMPTY
 
-  // 唯一省份/地区集合
   const provinceSet = new Set<string>()
   for (const c of cities) provinceSet.add(c.province)
 
-  // 今年新增（基于照片日期，不是 addedAt）
   const currentYear = new Date().getFullYear()
   const thisYearCount = cities.filter((c) => {
     const m = /^(\d{4})/.exec(c.date)
     return m ? parseInt(m[1], 10) === currentYear : false
   }).length
 
-  // 国内地级市去重（按 adcode 唯一计数；县级市的 adcode 是其上级地级市，所以宜兴+无锡=1）
   const cnAdcodes = new Set<string>()
   for (const c of cities) {
     if (c.adcode) cnAdcodes.add(c.adcode)
@@ -57,7 +51,6 @@ export function computeStats(cities: City[]): Stats {
   const cnCityCount = cnAdcodes.size
   const cnProgressPct = (cnCityCount / TOTAL_CN_PREFECTURES) * 100
 
-  // 极值
   let north = cities[0]
   let south = cities[0]
   let east = cities[0]
@@ -72,14 +65,11 @@ export function computeStats(cities: City[]): Stats {
   const latSpanKm = haversine(north.lat, north.lng, south.lat, south.lng)
   const lngSpanKm = haversine(east.lat, east.lng, west.lat, west.lng)
 
-  const tripCount = clusterIntoTrips(cities).length
-
   return {
     cityCount: cities.length,
     cnCityCount,
     provinceCount: provinceSet.size,
     thisYearCount,
-    tripCount,
     cnProgressPct,
     north,
     south,
